@@ -1,30 +1,37 @@
 package com.example.dukedemo;
-
 import java.io.FileWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.io.IOException;
 
 
-public class Scene2Controller implements Initializable {
+public class Scene2Controller extends Controller implements Initializable{
+
+
+    //Local variables for the scene
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
 
 
     @FXML
-    Label FirstName;
+    Label TheFirstName;
     @FXML
-    Label LastName;
+    Label TheLastName;
 
 
     @FXML
@@ -48,15 +55,14 @@ public class Scene2Controller implements Initializable {
 
 
     //parts
-    public String part1;
-    private String part2;
-    private String part3;
-    private String part4;
-    private String part5;
-    private String part6;
-    private String part7;
-    private String part8;
-    private String part9;
+    public String part1 = "";
+    private String part2 = "";
+    private String part3 = "";
+    private String part4 = "";
+    private String part5 = "";
+    private String part6 = "";
+    private String part7 = "";
+    private String part8 = "";
     //parts
 
 
@@ -84,14 +90,14 @@ public class Scene2Controller implements Initializable {
 
 
     //price
-    private float price1 = 0;
-    private float price2 = 0;
-    private float price3 = 0;
-    private float price4 = 0;
-    private float price5 = 0;
-    private float price6 = 0;
-    private float price7 = 0;
-    private float price8 = 0;
+    private float price1;
+    private float price2;
+    private float price3;
+    private float price4;
+    private float price5;
+    private float price6;
+    private float price7;
+    private float price8;
     //price
 
     //labor
@@ -137,6 +143,7 @@ public class Scene2Controller implements Initializable {
 
 
 
+    float totalofeverything;
 
     SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
     String date = sdf.format(new Date()) + ".txt";
@@ -145,35 +152,51 @@ public class Scene2Controller implements Initializable {
 
 
 
+
+
     public void setthefname(String name){
-        this.FirstName.setText(name);
+        this.TheFirstName.setText(name);
+        System.out.println("Customer: " + customer.toString());
     }
 
     public void settheLname(String name){
-        this.LastName.setText(name);
+        this.TheLastName.setText(name);
     }
 
 
-    public void Calculate (ActionEvent event){
+
+    public void Save2 (ActionEvent event) throws IOException {
+        part1 = Part1.getText();
+        part2 = Part2.getText();
+        part3 = Part3.getText();
+        part4 = Part4.getText();
+        part5 = Part5.getText();
+        part6 = Part6.getText();
+        part7 = Part7.getText();
+        part8 = Part8.getText();
 
 
+        String name =  TheFirstName.getText() + " " + TheLastName.getText();
 
-        float Mark_Up_Multiplier = Float.parseFloat(Mark_up.getText());
-        System.out.println("Mark up multiplyer" + Mark_Up_Multiplier);
+        DOI = Descrption_of_Issue.getText();
+
+
+        float Mark_Up_Multiplier = 0;
+
+        if(!Mark_up.getText().isBlank()){
+            Mark_Up_Multiplier = Float.parseFloat(Mark_up.getText());
+        }
 
         float Mark_Up_Percentage = Mark_Up_Multiplier / 100;
-        System.out.println(Mark_Up_Percentage);
+        System.out.println("Mark up Percentage " + Mark_Up_Percentage);
 
         float price_place_holder;
 
-
-
-
         try {
-                //System.out.println("before parse" + this.price1);
-            price_place_holder = Float.parseFloat(Price1.getText()) * Mark_Up_Percentage;
+            //System.out.println("before parse" + this.price1);
+            price_place_holder = Float.parseFloat(Price1.getText()) * (Mark_Up_Percentage);
             this.price1 = Float.parseFloat(Price1.getText()) + price_place_holder;
-                //System.out.println("after parse " + this.price1);
+            System.out.println("after parse " + this.price1);
             Error1.setText("");
         }
         catch (NumberFormatException e) {
@@ -303,28 +326,15 @@ public class Scene2Controller implements Initializable {
             this.Error9.setText("!");
         }
 
-        float totalofeverything = price1 + price2 + price3 + price4 + price5 + price6 + price7 + price8 + labor1;
-        System.out.println(totalofeverything);
+        totalofeverything = price1 + price2 + price3 + price4 + price5 + price6 + price7 + price8 + labor1;
+        System.out.println("Total " + totalofeverything);
         Total.setText("Total of Parts and Labor:$"+ totalofeverything);
-
-
-
-    }
-
-
-
-
-    public void Save2 (ActionEvent event) throws IOException {
-
-        String name =  FirstName.getText() + " " + LastName.getText();
-
-        DOI = Descrption_of_Issue.getText();
 
 
         //writer for file for the specific customer use your own applicable file path
 
-        //BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name + "\\" + date, true));
-        BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\dukec\\Desktop\\Customers\\" + name + "\\" + date,true));
+       BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name + "\\" + date, true));
+       //BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\dukec\\Desktop\\Customers\\" + name + "\\" + date,true));
 
         writer.write("\n" + "\n" + "Description of Service, parts and cost."
                 + "\n" + "---------------------------------------" + "\n");
@@ -333,30 +343,30 @@ public class Scene2Controller implements Initializable {
 
         writer.write( "---------------------------------------" + "\n" + "\n");
 
-        if (Part1.getText().isBlank() == false){
+        if (!Part1.getText().isBlank()){
             writer.write(Part1.getText() + ": $"+ this.price1 + "\n");
         }
 
-        if (Part2.getText().isBlank() == false){
+        if (!Part2.getText().isBlank()){
             writer.write(Part2.getText()  + ": $"+ this.price2 + "\n");
         }
 
-        if (Part3.getText().isBlank() == false){
+        if (!Part3.getText().isBlank()){
             writer.write(Part3.getText()  + ": $" + this.price3 +  "\n");
         }
-        if (Part4.getText().isBlank() == false){
+        if (!Part4.getText().isBlank()){
             writer.write(Part4.getText()  + ": $" + this.price4 +  "\n");
         }
-        if (Part5.getText().isBlank() == false){
+        if (!Part5.getText().isBlank()){
             writer.write(Part5.getText()  + ": $" + this.price5 +  "\n");
         }
-        if (Part6.getText().isBlank() == false){
+        if (!Part6.getText().isBlank()){
             writer.write(Part6.getText()  + ": $" + this.price6 +  "\n");
         }
-        if (Part7.getText().isBlank() == false){
+        if (!Part7.getText().isBlank()){
             writer.write(Part7.getText()  + ": $" + this.price7 +  "\n");
         }
-        if (Part8.getText().isBlank() == false){
+        if (!Part8.getText().isBlank()){
             writer.write(Part8.getText()  + ": $" + this.price8 +  "\n");
         }
 
@@ -375,14 +385,109 @@ public class Scene2Controller implements Initializable {
                 " Any limitation contained herein does not apply where prohibited by law." + "\n" + "\n" + "\n" + "\n" + "\n" + "\n" +
                 "X Signature ______________________________________________________________________________" + "\n" + "\n");
 
-
         SaveMessage.setText("Saved!");
 
 
         writer.close();
-
     }
 
+    public void switchToPrintInvoice(ActionEvent event) throws IOException {
+
+        //main scene to get vehicle characteristics
+        //loading the second scene
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("PrintScreen.fxml"));
+        root = loader.load();
+
+        //calling PrintScreen class
+        PrintScreen printScreen = loader.getController();
+
+
+        //setting name attributes
+        printScreen.setName(this.TheFirstName.getText() + " " + this.TheLastName.getText());
+        //
+
+
+        //setting vehicle attributes
+        printScreen.setYear(vehicle.getYear());
+        printScreen.setMake(vehicle.getMake());
+        printScreen.setModel(vehicle.getModel());
+        printScreen.setMileage(vehicle.getMileage());
+        printScreen.setVin(vehicle.getVin());
+        //
+
+
+
+        //setting part and price attributes
+        //if there is no part, it sets the text to blank text for aesthetics
+        if(!part1.equals("")){
+            printScreen.setPart1(part1 + " =   " + (price1));
+        } else {
+            printScreen.setPart1("");
+        }
+
+        if(!part2.equals("")){
+            printScreen.setPart2(part2 + " =   " + (price2));
+        } else {
+            printScreen.setPart2("");
+        }
+
+        if(!part3.equals("")){
+            printScreen.setPart3(part3 + " =   " + (price3));
+        }else {
+            printScreen.setPart3("");
+        }
+
+        if(!part4.equals("")){
+            printScreen.setPart4(part4 + " =   " + (price4));
+        } else {
+            printScreen.setPart4("");
+        }
+
+        if(!part5.equals("")){
+            printScreen.setPart5(part5 + " =   " + (price5));
+        } else {
+            printScreen.setPart5("");
+        }
+
+        if(!part6.equals("")){
+            printScreen.setPart6(part6 + " =   " + (price6));
+        }else {
+            printScreen.setPart6("");
+        }
+
+        if(!part7.equals("")){
+            printScreen.setPart7(part7 + " =   " + (price7));
+        }else {
+            printScreen.setPart7("");
+        }
+
+        if(!part8.equals("")){
+            printScreen.setPart8(part8 + " =   " + (price8));
+        }else {
+            printScreen.setPart8("");
+        }
+        //
+
+
+        //set labor
+        printScreen.setLabor("Labor: " + (labor1));
+        //
+
+        //set total
+        printScreen.setTotal("Total: " + (totalofeverything));
+        //
+
+        //setting text box for issue description
+        printScreen.setDescription_Of_Issue(DOI);
+        //
+
+
+        //Parent root = FXMLLoader.load(getClass().getResource("PrintScreen.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
 
 
