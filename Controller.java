@@ -22,7 +22,9 @@ import java.util.regex.Pattern;
 public class Controller {
 
 
-        //text fields regarding PII for the customer for the scene
+    protected static HashMap<Customer,Vehicle> theCustomer = new HashMap<>();
+
+    //text fields regarding PII for the customer for the scene
     @FXML
     private TextField FirstName;
     @FXML
@@ -95,88 +97,97 @@ public class Controller {
         //the date used for printing purposes
     String TodayDate = sdf.format(new Date());
 
+
         //Customer object
-    Customer1 customer = new Customer1("","");
+    static Customer customer = new Customer("","");
         //Vehicle object
-    Vehicle1 vehicle = new Vehicle1("","","","","","");
+    static Vehicle vehicle = new Vehicle("","","","","","");
 
     public void NewCustomerButton(ActionEvent event) throws IOException {
 
-            //Normalization and sanitization for first name
+        NewCustomer();
+
+    }
+
+    public void NewCustomer() throws IOException{
+        //Normalization and sanitization for first name
         this.firstname = Sanitize(Normalizer.normalize(FirstName.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for last name
+        //Normalization and sanitization for last name
         this.lastname = Sanitize(Normalizer.normalize(LastName.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for Year
+        //Normalization and sanitization for Year
         this.Year = Sanitize(Normalizer.normalize(VehYear.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for Make
+        //Normalization and sanitization for Make
         this.Make = Sanitize(Normalizer.normalize(VehMake.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for Model
+        //Normalization and sanitization for Model
         this.Model = Sanitize(Normalizer.normalize(VehModel.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for Color
+        //Normalization and sanitization for Color
         this.Color = Sanitize(Normalizer.normalize(VehColor.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for Engine Displacement
+        //Normalization and sanitization for Engine Displacement
         this.Displacement = Sanitize(Normalizer.normalize(Engine_Displacement.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for Mileage
+        //Normalization and sanitization for Mileage
         this.Mileage = Sanitize(Normalizer.normalize(VehMilage.getText(), Normalizer.Form.NFKC));
 
 
-            //Normalization and sanitization for Vin
+        //Normalization and sanitization for Vin
         this.Vin = Sanitize(Normalizer.normalize(VehVin.getText(), Normalizer.Form.NFKC));
 
 
 
-            //Creating customer object and printing it for verification
-        Customer1 customer = new Customer1(this.firstname, this.lastname);
-            //print statement for validation
+        //Creating customer object and printing it for verification
+        customer = new Customer(this.firstname, this.lastname);
+        //print statement for validation
         System.out.println(customer);
 
-            //Creating vehicle object and printing it for verification to validation
-        Vehicle1 vehicle = new Vehicle1(this.Year,this.Make,this.Model, this.Color, this.Mileage, this.Vin);
-            //print statement for validation
+        //Creating vehicle object and printing it for verification to validation
+        vehicle = new Vehicle(this.Year,this.Make,this.Model, this.Color, this.Mileage, this.Vin);
+        //print statement for validation
         System.out.println(vehicle);
 
-            //name variable for use in creating the Parent file for the customer
+        //placing the customer into a map
+        theCustomer.put(customer,vehicle);
+
+        //name variable for use in creating the Parent file for the customer
         String name = firstname + " " + lastname;
 
         System.out.println("name: " + name);
 
 
-            //creation of parent file
-        //String path = "C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name ;
-        String path = "C:\\Users\\dukec\\Desktop\\Customers\\" + name ;
+        //creation of parent file
+        String path = "C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name ;
+        //String path = "C:\\Users\\dukec\\Desktop\\Customers\\" + name ;
 
-            //directory for where the file to be written
+        //directory for where the file to be written
         File directory = new File(path);
 
 
-            //checking to see if folder already exists
+        //checking to see if folder already exists
         if(!directory.exists()){
-                //makes directory if it doesn't exist.
+            //makes directory if it doesn't exist.
             if(directory.mkdir()){
-                    //changing text above button
+                //changing text above button
                 Error2.setText("Folder Created");
-                    //printing for verification
+                //printing for verification
                 System.out.println("folder created!");
             }
         }
         else {
-                //notifying customer the folder already exist.
+            //notifying customer the folder already exist.
             Error2.setText("Customer already exists");
-                //printing for verification
+            //printing for verification
             System.out.println("Folder already exists.");
         }
 
@@ -184,81 +195,90 @@ public class Controller {
         try {
             //writer for file for the specific customer use your own applicable file path
 
-            //BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name + "\\" + date));
-            BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\dukec\\Desktop\\Customers\\" + name + "\\" + date));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name + "\\" + date));
+            //BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\dukec\\Desktop\\Customers\\" + name + "\\" + date));
 
 
             //writing person and vehicle attributes to the file
-        writer.write("Today's date: " + TodayDate + "\n"
-                + " " + "\n" +
-                "Customer name: " + this.firstname + " "  + this.lastname + "\n" +
-                " " + "\n" +
-                "Vehicle Year: " + this.Year + " || " +
-                "Vehicle Make: " + this.Make + " || " +
-                "Vehicle Model: " + this.Model + " || " +
-                "Engine Displacement: " + this.Displacement + " || " +
-                "Vehicle Color: " + this.Color + " || " +
-                "Vehicle Mileage: " + this.Mileage + " || " +
-                "Vehicle Vin: " + this.Vin + "\n" + "\n");
+            writer.write("Today's date: " + TodayDate + "\n"
+                    + " " + "\n" +
+                    "Customer name: " + this.firstname + " "  + this.lastname + "\n" +
+                    " " + "\n" +
+                    "Vehicle Year: " + this.Year + " || " +
+                    "Vehicle Make: " + this.Make + " || " +
+                    "Vehicle Model: " + this.Model + " || " +
+                    "Engine Displacement: " + this.Displacement + " || " +
+                    "Vehicle Color: " + this.Color + " || " +
+                    "Vehicle Mileage: " + this.Mileage + " || " +
+                    "Vehicle Vin: " + this.Vin + "\n" + "\n");
 
-        writer.close();
+            writer.close();
         }
         catch (Exception e){
             System.out.println("File not found");
         }
-    }
 
+    }
 
 
 
     public void ExistingCustomerButton(ActionEvent event) throws IOException {
 
-            //setting text above Existing customer button to whitespace
+        ExistingCustomer();
+
+    }
+
+    public void ExistingCustomer() throws IOException{
+        //setting text above Existing customer button to whitespace
         this.Error.setText(" ");
 
-            //Normalization and sanitization for first name
+        //Normalization and sanitization for first name
         this.firstname = Sanitize(Normalizer.normalize(FirstName.getText(), Normalizer.Form.NFKC));
 
-            //Normalization and sanitization for last name
+        //Normalization and sanitization for last name
         this.lastname = Sanitize(Normalizer.normalize(LastName.getText(), Normalizer.Form.NFKC));
 
-            //creating customer object
-        Customer1 customer = new Customer1(this.firstname, this.lastname);
-            //print statement for validation
+        //creating customer object
+        customer = new Customer(this.firstname, this.lastname);
+        //print statement for validation
         System.out.println(customer);
 
-            //print break for readability
+        //print break for readability
         System.out.println(" ");
 
-            //Normalization and sanitization for Year
+        //Normalization and sanitization for Year
         this.Year = Sanitize(Normalizer.normalize(VehYear.getText(), Normalizer.Form.NFKC));
 
-            //Normalization and sanitization for Make
+        //Normalization and sanitization for Make
         this.Make = Sanitize(Normalizer.normalize(VehMake.getText(), Normalizer.Form.NFKC));
 
-            //Normalization and sanitization for Model
+        //Normalization and sanitization for Model
         this.Model = Sanitize(Normalizer.normalize(VehModel.getText(), Normalizer.Form.NFKC));
 
-            //Normalization and sanitization for Color
+        //Normalization and sanitization for Color
         this.Color = Sanitize(Normalizer.normalize(VehColor.getText(), Normalizer.Form.NFKC));
 
-            //Normalization and sanitization for Engine Displacement
+        //Normalization and sanitization for Engine Displacement
         this.Displacement = Sanitize(Normalizer.normalize(Engine_Displacement.getText(), Normalizer.Form.NFKC));
 
-            //Normalization and sanitization for Mileage
+        //Normalization and sanitization for Mileage
         this.Mileage = Sanitize(Normalizer.normalize(VehMilage.getText(), Normalizer.Form.NFKC));
 
-            //Normalization and sanitization for Vin
+        //Normalization and sanitization for Vin
         this.Vin = Sanitize(Normalizer.normalize(VehVin.getText(), Normalizer.Form.NFKC));
 
 
-            //vehicle object creation
-        Vehicle1 vehicle = new Vehicle1(this.Year,this.Make,this.Model, this.Color, this.Mileage, this.Vin);
-            //print statement for verification
+        //vehicle object creation
+        vehicle = new Vehicle(this.Year,this.Make,this.Model, this.Color, this.Mileage, this.Vin);
+        //print statement for verification
         System.out.println(vehicle);
 
-            //creating variable name for creation of file to write to
+        //creating variable name for creation of file to write to
         //String name =  FirstName.getText() + " " + LastName.getText();
+
+        theCustomer.put(customer,vehicle);
+        System.out.println(theCustomer);
+
 
         //creating variable name for creation of file to write to
         String name =  firstname + " " + lastname;
@@ -266,11 +286,10 @@ public class Controller {
 
         try {
             //writer for file for the specific customer use your own applicable file path
+            BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name + "\\" + date, true));
+            //BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\dukec\\Desktop\\Customers\\" + name + "\\" + date, true));
 
-        //BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\azdmc\\Desktop\\Drizzle\\" + name + "\\" + date, true));
-         BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\dukec\\Desktop\\Customers\\" + name + "\\" + date, true));
-
-                //Customer and Vehicle attribute being written and the format in which it is written.
+            //Customer and Vehicle attribute being written and the format in which it is written.
             writer.write("Today's date: " + TodayDate + "\n"
                     + " " + "\n" +
                     "Customer name: " + this.firstname + " " + this.lastname + "\n" +
@@ -283,18 +302,21 @@ public class Controller {
                     "Vehicle Mileage: " + this.Mileage + " || " +
                     "Vehicle Vin: " + this.Vin + "\n");
 
-                //changing text above the save existing customer button
+            //changing text above the save existing customer button
             Filecreated.setText("Created!");
 
 
             writer.close();
         } catch (FileNotFoundException e) {
             this.Error.setText("This customer doesn't exist." + "\n" + "Check spelling or select, new customer.");
+            NewCustomer();
         }
+
+
     }
 
-
     public void SwitchToSecondary(ActionEvent event) throws IOException {
+
 
             //loading the second scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SecondaryScene.fxml"));
@@ -303,10 +325,8 @@ public class Controller {
             //calling scene2controller class
         Scene2Controller scene2controller = loader.getController();
 
-            //calling set f&L name function to bring to the second scene
-            //this is used for being able to write the correct file, as the naming scheme for the files uses the customer first and last name
-        scene2controller.setthefname(firstname);
-        scene2controller.settheLname(lastname);
+        scene2controller.setthefname(customer.getFirstName());
+        scene2controller.settheLname(customer.getLastName());
 
 
 
@@ -336,13 +356,13 @@ public class Controller {
                 System.out.println("Invalid user input");
                 attribute = "";
                 System.out.println("attribute:" + attribute);
-
             }
 
         }
         return attribute;
 
     }
+
 
 
 
