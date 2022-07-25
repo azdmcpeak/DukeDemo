@@ -21,6 +21,7 @@ import java.io.IOException;
 
 public class Scene2Controller extends Controller implements Initializable{
 
+    protected static HashMap<String,Double> PriceAndParts = new HashMap<>();
 
     //Local variables for the scene
     private Stage stage;
@@ -55,14 +56,14 @@ public class Scene2Controller extends Controller implements Initializable{
 
 
     //parts
-    public String part1 = "";
-    private String part2 = "";
-    private String part3 = "";
-    private String part4 = "";
-    private String part5 = "";
-    private String part6 = "";
-    private String part7 = "";
-    private String part8 = "";
+    private String part1;
+    private String part2;
+    private String part3;
+    private String part4;
+    private String part5;
+    private String part6;
+    private String part7;
+    private String part8;
     //parts
 
 
@@ -90,14 +91,14 @@ public class Scene2Controller extends Controller implements Initializable{
 
 
     //price
-    private float price1;
-    private float price2;
-    private float price3;
-    private float price4;
-    private float price5;
-    private float price6;
-    private float price7;
-    private float price8;
+    private double price1;
+    private double price2;
+    private double price3;
+    private double price4;
+    private double price5;
+    private double price6;
+    private double price7;
+    private double price8;
     //price
 
     //labor
@@ -115,9 +116,9 @@ public class Scene2Controller extends Controller implements Initializable{
 
 
     @FXML
-    private TextArea Descrption_of_Issue;
+    protected TextArea Descrption_of_Issue;
 
-    private String DOI;
+   static protected String DOI;
 
     @FXML
     private Label Error1;
@@ -143,13 +144,10 @@ public class Scene2Controller extends Controller implements Initializable{
 
 
 
-    float totalofeverything;
+    double totalofeverything;
 
     SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
     String date = sdf.format(new Date()) + ".txt";
-
-
-
 
 
 
@@ -393,6 +391,44 @@ public class Scene2Controller extends Controller implements Initializable{
 
     public void switchToPrintInvoice(ActionEvent event) throws IOException {
 
+        System.out.println(DOI);
+
+        if(!part1.isEmpty()){
+            PriceAndParts.put(part1,price1);
+        }
+
+        if(!part2.isEmpty()){
+            PriceAndParts.put(part2,price2);
+        }
+
+        if(!part3.isEmpty()){
+            PriceAndParts.put(part3,price3);
+        }
+
+        if(!part4.isEmpty()){
+            PriceAndParts.put(part4,price4);
+        }
+
+        if(!part5.isEmpty()){
+            PriceAndParts.put(part5,price5);
+        }
+
+        if(!part6.isEmpty()){
+            PriceAndParts.put(part6,price6);
+        }
+
+        if(!part6.isEmpty()){
+            PriceAndParts.put(part6,price6);
+        }
+
+        if(!part7.isEmpty()){
+            PriceAndParts.put(part7,price2);
+        }
+
+        if(!part8.isEmpty()){
+            PriceAndParts.put(part8,price8);
+        }
+
         //main scene to get vehicle characteristics
         //loading the second scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("PrintScreen.fxml"));
@@ -400,6 +436,8 @@ public class Scene2Controller extends Controller implements Initializable{
 
         //calling PrintScreen class
         PrintScreen printScreen = loader.getController();
+
+
 
 
         //setting name attributes
@@ -461,7 +499,7 @@ public class Scene2Controller extends Controller implements Initializable{
             printScreen.setPart7("");
         }
 
-        if(!part8.equals("")){
+        if(!part8.isBlank()){
             printScreen.setPart8(part8 + " =   " + (price8));
         }else {
             printScreen.setPart8("");
@@ -482,11 +520,12 @@ public class Scene2Controller extends Controller implements Initializable{
         //
 
 
-        //Parent root = FXMLLoader.load(getClass().getResource("PrintScreen.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+
+        InvoicePDFCreator invoicePDFCreator = new InvoicePDFCreator();
+
+        invoicePDFCreator.createPDF();
+
+
     }
 
 
@@ -496,4 +535,5 @@ public class Scene2Controller extends Controller implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
+
 }
