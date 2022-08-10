@@ -53,7 +53,7 @@ public class EmailSender extends Scene2Controller{
             messageBodyPart.setText("Mail Body");
 
             MimeBodyPart attachmentPart = new MimeBodyPart();
-            attachmentPart.attachFile(new File("C:\\Users\\azdmc\\Desktop\\Drizzle\\Derek McPeak\\Aug 7, 2022.pdf"));
+            attachmentPart.attachFile(new File("put your file path here"));
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
